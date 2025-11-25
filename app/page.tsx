@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Settings } from 'lucide-react';
-import NextLink from 'next/link';
+import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock } from 'lucide-react';
 
 export default function Home() {
   const [text, setText] = useState('');
@@ -207,13 +206,6 @@ export default function Home() {
               </div>
             </div>
             <div className="flex-1 flex justify-end">
-              <NextLink
-                href="/settings"
-                className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
-                title="設定"
-              >
-                <Settings className="w-5 h-5 text-neutral-600" />
-              </NextLink>
             </div>
           </div>
 
