@@ -1,0 +1,46 @@
+[dotenv@17.2.3] injecting env (3) from .env.local -- tip: 翌・・backup and recover secrets: https://dotenvx.com/ops
+Full Response:
+{
+  "object": "database",
+  "id": "13b4dbc3-b611-8068-af34-c9b64014279f",
+  "title": [
+    {
+      "type": "text",
+      "text": {
+        "content": "繧ｿ繧ｹ繧ｯDB",
+        "link": null
+      },
+      "annotations": {
+        "bold": false,
+        "italic": false,
+        "strikethrough": false,
+        "underline": false,
+        "code": false,
+        "color": "default"
+      },
+      "plain_text": "繧ｿ繧ｹ繧ｯDB",
+      "href": null
+    }
+  ],
+  "description": [],
+  "parent": {
+    "type": "block_id",
+    "block_id": "13b4dbc3-b611-81fb-88a7-e71de6c8a0cb"
+  },
+  "is_inline": false,
+  "in_trash": false,
+  "is_locked": false,
+  "created_time": "2024-11-11T14:49:23.809+00:00",
+  "last_edited_time": "2025-11-24T22:20:26.815+00:00",
+  "data_sources": [
+    {
+      "id": "016bfc2d-f3c9-41f7-b034-d39699f37e75",
+      "name": "繧ｿ繧ｹ繧ｯDB"
+    }
+  ],
+  "icon": null,
+  "cover": null,
+  "url": "https://www.notion.so/13b4dbc3b6118068af34c9b64014279f",
+  "public_url": null,
+  "request_id": "b8145a89-7026-4dd4-a342-eddd3ec2d707"
+}

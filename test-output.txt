@@ -1,0 +1,22 @@
+Loaded .env.local
+
+Testing path: v1/databases/1ce4dbc3b61180c4899ecaa6feca4800/query
+
+@notionhq/client warn: request fail {
+  code: 'invalid_request_url',
+  message: 'Invalid request URL.',
+  requestId: '64480570-45b8-4449-92ac-6a4261756cae'
+}
+笨・FAILED
+Error message: Invalid request URL.
+Error code: invalid_request_url
+
+Full error details:
+{
+  "name": "APIResponseError",
+  "code": "invalid_request_url",
+  "status": 400,
+  "headers": {},
+  "body": "{\"object\":\"error\",\"status\":400,\"code\":\"invalid_request_url\",\"message\":\"Invalid request URL.\",\"request_id\":\"64480570-45b8-4449-92ac-6a4261756cae\"}",
+  "request_id": "64480570-45b8-4449-92ac-6a4261756cae"
+}

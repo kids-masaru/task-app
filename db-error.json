@@ -1,0 +1,8 @@
+{
+  "name": "APIResponseError",
+  "code": "invalid_request_url",
+  "status": 400,
+  "headers": {},
+  "body": "{\"object\":\"error\",\"status\":400,\"code\":\"invalid_request_url\",\"message\":\"Invalid request URL.\",\"request_id\":\"2a98d758-3e08-46ca-a569-f57ff2ce609c\"}",
+  "request_id": "2a98d758-3e08-46ca-a569-f57ff2ce609c"
+}
