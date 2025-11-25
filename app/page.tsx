@@ -168,7 +168,7 @@ export default function Home() {
         });
       } else {
         toast.success(`${count}件のタスクを作成しました！`, {
-          description: tasks.map(t => `${t.name} (${t.date})`).join('\n'),
+          description: tasks.map((t: any) => `${t.name} (${t.date})`).join('\n'),
         });
       }
 
