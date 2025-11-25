@@ -31,13 +31,19 @@ export async function POST(req: NextRequest) {
       
       2. "date": Calculate the date based on the text and current date (YYYY-MM-DD). If no date is mentioned, use the current date or a reasonable default (e.g., tomorrow).
       
-      3. If the text contains multiple tasks (e.g., "○○ってタスクと●●ってタスク作って"), create separate entries for each task.
+      3. "details": Create a detailed, structured summary of the task content in Japanese.
+         - Organize the information clearly (e.g., Who, What, When, Where, Why).
+         - Include any specific numbers, dates, or names mentioned.
+         - Format it to be easily readable as a task description.
+         - Do NOT just copy the input text. Summarize and restructure it relevant to this specific task.
+         - Use bullet points or clear sections if appropriate.
       
-      4. If only one task is mentioned, still return an array with one item.
+      4. If the text contains multiple tasks (e.g., "○○ってタスクと●●ってタスク作って"), create separate entries for each task.
+      
+      5. If only one task is mentioned, still return an array with one item.
       
       Output strictly valid JSON array only. No markdown formatting.
-      Example for single task: [{"name": "【確認】Slackの内容", "date": "2023-10-25"}]
-      Example for multiple tasks: [{"name": "【確認】Slackの内容", "date": "2023-10-25"}, {"name": "【整理】開園タスク", "date": "2023-10-26"}]
+      Example for single task: [{"name": "【確認】Slackの内容", "date": "2023-10-25", "details": "・対象: Slackの未読メッセージ\n・アクション: 内容を確認し、必要なものに返信する\n・期限: 本日中"}]
     `;
 
     const result = await model.generateContent(prompt);
@@ -92,7 +98,7 @@ export async function POST(req: NextRequest) {
               {
                 type: 'text',
                 text: {
-                  content: text,
+                  content: taskData.details || text, // Use summarized details, fallback to original text
                 },
               },
             ],
