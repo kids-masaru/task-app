@@ -4,7 +4,7 @@ import { Client } from '@notionhq/client';
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, url, model: selectedModel, timeSlot, databaseId, relationId } = await req.json();
+    const { text, url, model: selectedModel, timeSlot, databaseId, relationId, selectedDate } = await req.json();
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
@@ -15,8 +15,12 @@ export async function POST(req: NextRequest) {
     const model = genAI.getGenerativeModel({ model: selectedModel || 'gemini-2.0-flash' });
 
     const currentDate = new Date();
+    // Use selectedDate if provided, otherwise use current date
+    const targetDate = selectedDate || currentDate.toISOString().split('T')[0];
+
     const prompt = `
       Current Date and Time: ${currentDate.toISOString()}
+      Target Date for Tasks: ${targetDate}
       
       Analyze the following text and extract ALL tasks into a JSON array. If the user mentions multiple tasks, create separate entries for each.
       
@@ -29,7 +33,7 @@ export async function POST(req: NextRequest) {
          - Examples: 【確認】Slackの内容, 【整理】開園タスク, 【調整】会議日時, 【作成】台本, 【電話】処遇改善について
          - Analyze the content carefully to determine the most appropriate action verb for EACH task
       
-      2. "date": Calculate the date based on the text and current date (YYYY-MM-DD). If no date is mentioned, use the current date or a reasonable default (e.g., tomorrow).
+      2. "date": Use the Target Date (${targetDate}) as the default date for all tasks. Only use a different date if the text explicitly mentions a specific date that differs from the target date.
       
       3. "details": Create a detailed, structured summary of the task content in Japanese.
          - Organize the information clearly (e.g., Who, What, When, Where, Why).
@@ -43,7 +47,7 @@ export async function POST(req: NextRequest) {
       5. If only one task is mentioned, still return an array with one item.
       
       Output strictly valid JSON array only. No markdown formatting.
-      Example for single task: [{"name": "【確認】Slackの内容", "date": "2023-10-25", "details": "・対象: Slackの未読メッセージ\n・アクション: 内容を確認し、必要なものに返信する\n・期限: 本日中"}]
+      Example for single task: [{"name": "【確認】Slackの内容", "date": "${targetDate}", "details": "・対象: Slackの未読メッセージ\\n・アクション: 内容を確認し、必要なものに返信する\\n・期限: 本日中"}]
     `;
 
     const result = await model.generateContent(prompt);

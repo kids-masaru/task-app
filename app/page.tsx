@@ -2,13 +2,17 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock } from 'lucide-react';
+import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar } from 'lucide-react';
 
 export default function Home() {
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [model, setModel] = useState('gemini-2.0-flash');
   const [timeSlot, setTimeSlot] = useState('12:00-16:00');
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  });
   const [databaseId, setDatabaseId] = useState('');
   const [databases, setDatabases] = useState<Array<{ id: string; name: string; relationDbId?: string }>>([]);
   const [relationPages, setRelationPages] = useState<Array<{ id: string; title: string }>>([]);
@@ -148,7 +152,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text, url, model, timeSlot, databaseId, relationId: selectedRelation }),
+        body: JSON.stringify({ text, url, model, timeSlot, databaseId, relationId: selectedRelation, selectedDate }),
       });
 
       const data = await response.json();
@@ -219,6 +223,21 @@ export default function Home() {
 
         <form onSubmit={handleSubmit} className="space-y-4 bg-white border border-neutral-200 rounded-lg p-4 sm:p-6 shadow-sm">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Date Selection */}
+            <div className="space-y-2">
+              <label htmlFor="date" className="text-sm font-medium text-neutral-700 flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                日付
+              </label>
+              <input
+                type="date"
+                id="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-md bg-white border border-neutral-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
+              />
+            </div>
+
             {/* Time Slot - Only show for databases that support it */}
             {databaseId === (process.env.NEXT_PUBLIC_DATABASE_WITH_TIMESLOT || databases[0]?.id) && (
               <div className="space-y-2">
