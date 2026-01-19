@@ -33,8 +33,9 @@ export async function GET(request: NextRequest) {
         }
 
         // Try a simpler query first to see if connection works, then the full query
-        // Query: Status=Call/Mail, User=Izaki, Date=TargetDate
-        const query = `対応日 = "${date}" and 対応者 like "井﨑優" and (新規営業件名 in ("架電、メール", "アポ架電（担当者通電）"))`;
+        // Query: Status=Call/Mail, User=Izaki (Code: izaki.m@kids-21.co.jp), Date=TargetDate
+        // Fixed: Use 'in' operator with User Code for USER_SELECT field
+        const query = `対応日 = "${date}" and 対応者 in ("izaki.m@kids-21.co.jp") and 新規営業件名 in ("架電、メール", "アポ架電（担当者通電）")`;
 
         const url = `${BASE_URL}/k/v1/records.json?app=${APP_ID}&query=${encodeURIComponent(query)}&totalCount=true&limit=1`;
 
