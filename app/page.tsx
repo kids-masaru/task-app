@@ -64,10 +64,19 @@ export default function Home() {
           const data = await res.json();
           setCallCount(data.count);
         } else {
+          try {
+            const err = await res.json();
+            console.error('Stats fetch error:', err);
+            toast.error('実績取得エラー', { description: err.error || '不明なエラー' });
+          } catch (e) {
+            console.error('Stats fetch error (raw):', res.statusText);
+            toast.error('実績取得エラー', { description: res.statusText });
+          }
           setCallCount(null);
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
+        toast.error('実績取得エラー', { description: e.message || '接続エラー' });
         setCallCount(null);
       } finally {
         setIsStatLoading(false);
