@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar, CheckCircle } from 'lucide-react';
+import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar, CheckCircle, Phone } from 'lucide-react';
 
 export default function Home() {
   const [text, setText] = useState('');
@@ -20,6 +20,18 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // Call Counter States
+  const [statDate, setStatDate] = useState(() => {
+    // Default to Yesterday (or Friday if today is Monday)
+    const d = new Date();
+    const day = d.getDay();
+    const diff = day === 1 ? 3 : day === 0 ? 2 : 1; // Mon->Fri(3), Sun->Fri(2), Other->Yesterday(1)
+    d.setDate(d.getDate() - diff);
+    return d.toISOString().split('T')[0];
+  });
+  const [callCount, setCallCount] = useState<number | null>(null);
+  const [isStatLoading, setIsStatLoading] = useState(false);
+
   // Searchable dropdown states
   const [searchText, setSearchText] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -35,6 +47,35 @@ export default function Home() {
     "gemini-2.5-pro",
     "gemini-3-pro"
   ];
+
+  // Fetch Call Stats
+  useEffect(() => {
+    // Only fetch if "Task DB" or similar is selected (or just always fetch for now as req "Task DB" context)
+    // The user requirement said: "When Task DB is selected...".
+    // Let's check databaseId.
+    // Assuming default/first DB is the main Task DB.
+
+    // Check if we should fetch
+    const fetchStats = async () => {
+      setIsStatLoading(true);
+      try {
+        const res = await fetch(`/api/kintone/stats?date=${statDate}`);
+        if (res.ok) {
+          const data = await res.json();
+          setCallCount(data.count);
+        } else {
+          setCallCount(null);
+        }
+      } catch (e) {
+        console.error(e);
+        setCallCount(null);
+      } finally {
+        setIsStatLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [statDate]);
 
   const timeSlots = [
     "8:00-12:00",
@@ -215,6 +256,22 @@ export default function Home() {
               </div>
             </div>
             <div className="flex-1 flex justify-end">
+              {/* Call Counter Spec: Top area, unintrusive */}
+              <div className="flex items-center gap-2 bg-neutral-100/80 p-1.5 rounded-lg border border-neutral-200 text-xs sm:text-sm">
+                <div className="flex items-center gap-1">
+                  <Phone className="w-3 h-3 text-neutral-500" />
+                  <span className="hidden sm:inline text-neutral-500">実績:</span>
+                </div>
+                <input
+                  type="date"
+                  value={statDate}
+                  onChange={(e) => setStatDate(e.target.value)}
+                  className="bg-transparent border-none p-0 w-24 sm:w-28 text-neutral-700 font-medium focus:ring-0 text-xs sm:text-sm"
+                />
+                <div className="font-bold text-blue-600 min-w-[30px] text-right">
+                  {isStatLoading ? '...' : (callCount !== null ? `${callCount}件` : '-')}
+                </div>
+              </div>
             </div>
           </div>
 
