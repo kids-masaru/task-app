@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar } from 'lucide-react';
+import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar, CheckCircle } from 'lucide-react';
 
 export default function Home() {
   const [text, setText] = useState('');
@@ -18,6 +18,7 @@ export default function Home() {
   const [relationPages, setRelationPages] = useState<Array<{ id: string; title: string }>>([]);
   const [selectedRelation, setSelectedRelation] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // Searchable dropdown states
   const [searchText, setSearchText] = useState('');
@@ -166,17 +167,21 @@ export default function Home() {
       const count = data.count || tasks.length;
 
       if (count === 1) {
-        toast.success('タスクを作成しました！', {
-          description: `${tasks[0].name} (${tasks[0].date})`,
-        });
+        // toast.success('タスクを作成しました！', {
+        //   description: `${tasks[0].name} (${tasks[0].date})`,
+        // });
       } else {
-        toast.success(`${count}件のタスクを作成しました！`, {
-          description: tasks.map((t: any) => `${t.name} (${t.date})`).join('\n'),
-        });
+        // toast.success(`${count}件のタスクを作成しました！`, {
+        //   description: tasks.map((t: any) => `${t.name} (${t.date})`).join('\n'),
+        // });
       }
 
       setText('');
       setUrl('');
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 1500);
     } catch (error: any) {
       toast.error('Failed to create task', {
         description: error.message,
@@ -442,6 +447,24 @@ export default function Home() {
           </button>
         </form>
       </div>
+
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
+          <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
+          <p className="text-lg font-semibold text-neutral-700">更新中...</p>
+        </div>
+      )}
+
+      {/* Success Overlay */}
+      {showSuccess && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="flex flex-col items-center p-8 bg-white rounded-2xl shadow-xl border border-neutral-100 transform scale-110">
+            <CheckCircle className="w-16 h-16 text-green-500 mb-4 animate-bounce" />
+            <p className="text-2xl font-bold text-neutral-800">完了！</p>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
