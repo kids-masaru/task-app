@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     // 1. Process with Gemini
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-    const model = genAI.getGenerativeModel({ model: selectedModel || 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: selectedModel || 'gemini-3-flash-preview' });
 
     const currentDate = new Date();
     // Use selectedDate if provided, otherwise use current date
@@ -35,19 +35,18 @@ export async function POST(req: NextRequest) {
       
       2. "date": Use the Target Date (${targetDate}) as the default date for all tasks. Only use a different date if the text explicitly mentions a specific date that differs from the target date.
       
-      3. "details": Create a detailed, structured summary of the task content in Japanese.
-         - Organize the information clearly (e.g., Who, What, When, Where, Why).
-         - Include any specific numbers, dates, or names mentioned.
-         - Format it to be easily readable as a task description.
-         - Do NOT just copy the input text. Summarize and restructure it relevant to this specific task.
-         - Use bullet points or clear sections if appropriate.
+      3. "details": 入力テキストの内容を自然な日本語でまとめる。以下のルールに従うこと：
+         - 元のテキストの文脈（誰から、何の話、経緯）をできるだけ残す。抽象化しすぎない。
+         - 箇条書きではなく、自然な文章で書く。後から読んで「何のタスクだったか」思い出せることが最優先。
+         - 人名、固有名詞、具体的な数値・日付が含まれていればそのまま残す。
+         - 入力テキストが短い場合は、無理に膨らませず簡潔にそのまま伝える。
       
       4. If the text contains multiple tasks (e.g., "○○ってタスクと●●ってタスク作って"), create separate entries for each task.
       
       5. If only one task is mentioned, still return an array with one item.
       
       Output strictly valid JSON array only. No markdown formatting.
-      Example for single task: [{"name": "【確認】Slackの内容", "date": "${targetDate}", "details": "・対象: Slackの未読メッセージ\\n・アクション: 内容を確認し、必要なものに返信する\\n・期限: 本日中"}]
+      Example for single task: [{"name": "【電話】処遇改善の書類提出", "date": "${targetDate}", "details": "山崎さんから電話あり。処遇改善の件で、来週までに書類を提出してほしいとのこと。"}]
     `;
 
     const result = await model.generateContent(prompt);

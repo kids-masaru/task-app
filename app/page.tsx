@@ -7,7 +7,7 @@ import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar, CheckC
 export default function Home() {
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
-  const [model, setModel] = useState('gemini-2.0-flash');
+  const model = 'gemini-3-flash-preview';
   const [timeSlot, setTimeSlot] = useState('12:00-16:00');
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date();
@@ -39,14 +39,7 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const models = [
-    "gemini-2.0-flash",
-    "gemini-2.0-flash-lite",
-    "gemini-2.5-flash",
-    "gemini-2.5-flash-lite",
-    "gemini-2.5-pro",
-    "gemini-3-pro"
-  ];
+
 
   // Fetch Call Stats
   useEffect(() => {
@@ -96,7 +89,6 @@ export default function Home() {
     // Load saved settings from localStorage
     const savedDatabase = localStorage.getItem('taskapp_default_database');
     const savedTimeSlot = localStorage.getItem('taskapp_default_timeslot');
-    const savedModel = localStorage.getItem('taskapp_default_model');
 
     // Fetch available databases
     fetch('/api/databases')
@@ -117,9 +109,6 @@ export default function Home() {
     // Apply saved settings
     if (savedTimeSlot) {
       setTimeSlot(savedTimeSlot);
-    }
-    if (savedModel) {
-      setModel(savedModel);
     }
   }, []);
 
@@ -475,24 +464,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="model" className="text-sm font-medium text-neutral-700 flex items-center gap-2">
-              <span className="text-xs bg-neutral-100 px-2 py-0.5 rounded text-neutral-600 border border-neutral-200">AI</span>
-              モデル
-            </label>
-            <select
-              id="model"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="w-full px-3 py-2 rounded-md bg-white border border-neutral-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
-            >
-              {models.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
-          </div>
+
 
           <button
             type="submit"
