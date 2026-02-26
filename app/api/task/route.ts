@@ -89,19 +89,25 @@ export async function POST(req: NextRequest) {
     }
 
     // Auto-detect property names from the database schema
-    const dbSchema = await notion.databases.retrieve({ database_id: targetDatabaseId });
-    const properties = (dbSchema as any).properties as Record<string, any>;
-
     let titlePropertyName = 'Name'; // fallback
     let datePropertyName = 'Date';  // fallback
 
-    for (const [propName, propConfig] of Object.entries(properties)) {
-      if (propConfig.type === 'title') {
-        titlePropertyName = propName;
+    try {
+      const dbSchema = await notion.databases.retrieve({ database_id: targetDatabaseId });
+      const properties = (dbSchema as any).properties;
+
+      if (properties) {
+        for (const [propName, propConfig] of Object.entries(properties) as [string, any][]) {
+          if (propConfig.type === 'title') {
+            titlePropertyName = propName;
+          }
+          if (propConfig.type === 'date') {
+            datePropertyName = propName;
+          }
+        }
       }
-      if (propConfig.type === 'date') {
-        datePropertyName = propName;
-      }
+    } catch (schemaError) {
+      console.error('Failed to retrieve database schema, using fallback property names:', schemaError);
     }
 
     console.log(`Detected property names - Title: "${titlePropertyName}", Date: "${datePropertyName}"`);

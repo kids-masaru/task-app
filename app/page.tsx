@@ -231,9 +231,6 @@ export default function Home() {
     } catch (error: any) {
       setErrorMessage(error.message || 'タスクの作成に失敗しました');
       setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-      }, 3000);
     } finally {
       setIsLoading(false);
     }
@@ -524,13 +521,17 @@ export default function Home() {
         </div>
       )}
 
-      {/* Error Overlay */}
+      {/* Error Overlay - tap anywhere to dismiss */}
       {showError && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-200">
+        <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-200 cursor-pointer"
+          onClick={() => setShowError(false)}
+        >
           <div className="flex flex-col items-center p-8 bg-white rounded-2xl shadow-xl border border-red-100 transform scale-110 max-w-md mx-4">
             <XCircle className="w-16 h-16 text-red-500 mb-4" />
             <p className="text-2xl font-bold text-neutral-800 mb-2">エラー</p>
             <p className="text-sm text-neutral-500 text-center">{errorMessage}</p>
+            <p className="text-xs text-neutral-400 mt-4">タップして閉じる</p>
           </div>
         </div>
       )}
