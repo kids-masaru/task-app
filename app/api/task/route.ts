@@ -105,13 +105,20 @@ export async function POST(req: NextRequest) {
       const schemaData = await schemaRes.json();
 
       if (schemaData.properties) {
+        let firstDateProp: string | null = null;
         for (const [propName, propConfig] of Object.entries(schemaData.properties) as [string, any][]) {
           if (propConfig.type === 'title') {
             titlePropertyName = propName;
           }
-          if (propConfig.type === 'date') {
-            datePropertyName = propName;
+          if (propConfig.type === 'date' && !firstDateProp) {
+            firstDateProp = propName;
           }
+        }
+        // Use 'Date' if it exists in the schema, otherwise use the first date property found
+        if (schemaData.properties['Date']?.type === 'date') {
+          datePropertyName = 'Date';
+        } else if (firstDateProp) {
+          datePropertyName = firstDateProp;
         }
       }
     } catch (schemaError) {
