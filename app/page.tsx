@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar, CheckCircle, Phone } from 'lucide-react';
+import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar, CheckCircle, XCircle, Phone } from 'lucide-react';
 
 export default function Home() {
   const [text, setText] = useState('');
@@ -19,6 +19,8 @@ export default function Home() {
   const [selectedRelation, setSelectedRelation] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Call Counter States
   const [statDate, setStatDate] = useState(() => {
@@ -160,6 +162,11 @@ export default function Home() {
         !inputRef.current.contains(event.target as Node)
       ) {
         setIsDropdownOpen(false);
+        // Clear selection if search text is empty (user tapped away without choosing)
+        if (!searchText.trim()) {
+          setSelectedRelation('');
+        }
+        setSearchText('');
       }
     };
 
@@ -222,9 +229,11 @@ export default function Home() {
         setShowSuccess(false);
       }, 1500);
     } catch (error: any) {
-      toast.error('Failed to create task', {
-        description: error.message,
-      });
+      setErrorMessage(error.message || 'タスクの作成に失敗しました');
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
     } finally {
       setIsLoading(false);
     }
@@ -294,7 +303,7 @@ export default function Home() {
                 id="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-white border border-neutral-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
+                className="w-full max-w-full box-border px-3 py-2 rounded-md bg-white border border-neutral-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-xs sm:text-sm"
               />
             </div>
 
@@ -396,11 +405,22 @@ export default function Home() {
                 />
 
                 {/* Dropdown List */}
-                {isDropdownOpen && filteredPages.length > 0 && (
+                {isDropdownOpen && (
                   <div
                     ref={dropdownRef}
                     className="absolute z-50 w-full mt-1 bg-white border border-neutral-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
                   >
+                    {/* Clear selection option */}
+                    <div
+                      onClick={() => {
+                        setSelectedRelation('');
+                        setIsDropdownOpen(false);
+                        setSearchText('');
+                      }}
+                      className={`px-3 py-2 cursor-pointer transition-colors text-sm text-neutral-400 hover:bg-neutral-100 ${!selectedRelation ? 'bg-blue-50' : ''}`}
+                    >
+                      選択なし
+                    </div>
                     {filteredPages.map((page, index) => (
                       <div
                         key={page.id}
@@ -500,6 +520,17 @@ export default function Home() {
           <div className="flex flex-col items-center p-8 bg-white rounded-2xl shadow-xl border border-neutral-100 transform scale-110">
             <CheckCircle className="w-16 h-16 text-green-500 mb-4 animate-bounce" />
             <p className="text-2xl font-bold text-neutral-800">完了！</p>
+          </div>
+        </div>
+      )}
+
+      {/* Error Overlay */}
+      {showError && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="flex flex-col items-center p-8 bg-white rounded-2xl shadow-xl border border-red-100 transform scale-110 max-w-md mx-4">
+            <XCircle className="w-16 h-16 text-red-500 mb-4" />
+            <p className="text-2xl font-bold text-neutral-800 mb-2">エラー</p>
+            <p className="text-sm text-neutral-500 text-center">{errorMessage}</p>
           </div>
         </div>
       )}

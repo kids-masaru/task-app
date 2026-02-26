@@ -88,6 +88,24 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Auto-detect property names from the database schema
+    const dbSchema = await notion.databases.retrieve({ database_id: targetDatabaseId });
+    const properties = (dbSchema as any).properties as Record<string, any>;
+
+    let titlePropertyName = 'Name'; // fallback
+    let datePropertyName = 'Date';  // fallback
+
+    for (const [propName, propConfig] of Object.entries(properties)) {
+      if (propConfig.type === 'title') {
+        titlePropertyName = propName;
+      }
+      if (propConfig.type === 'date') {
+        datePropertyName = propName;
+      }
+    }
+
+    console.log(`Detected property names - Title: "${titlePropertyName}", Date: "${datePropertyName}"`);
+
     // Create all tasks
     const createdTasks: any[] = [];
 
@@ -120,7 +138,7 @@ export async function POST(req: NextRequest) {
       }
 
       const pageProperties: any = {
-        Name: {
+        [titlePropertyName]: {
           title: [
             {
               text: {
@@ -129,7 +147,7 @@ export async function POST(req: NextRequest) {
             },
           ],
         },
-        Date: {
+        [datePropertyName]: {
           date: {
             start: taskData.date,
           },
