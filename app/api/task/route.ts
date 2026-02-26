@@ -89,15 +89,23 @@ export async function POST(req: NextRequest) {
     }
 
     // Auto-detect property names from the database schema
+    // Note: SDK v5.4.0 uses Notion API 2025-09-03 which no longer returns properties.
+    // We use raw fetch with the older API version to get the property schema.
     let titlePropertyName = 'Name'; // fallback
     let datePropertyName = 'Date';  // fallback
 
     try {
-      const dbSchema = await notion.databases.retrieve({ database_id: targetDatabaseId });
-      const properties = (dbSchema as any).properties;
+      const schemaRes = await fetch(`https://api.notion.com/v1/databases/${targetDatabaseId}`, {
+        headers: {
+          'Authorization': `Bearer ${notionApiKey}`,
+          'Notion-Version': '2022-06-28',
+          'Content-Type': 'application/json'
+        }
+      });
+      const schemaData = await schemaRes.json();
 
-      if (properties) {
-        for (const [propName, propConfig] of Object.entries(properties) as [string, any][]) {
+      if (schemaData.properties) {
+        for (const [propName, propConfig] of Object.entries(schemaData.properties) as [string, any][]) {
           if (propConfig.type === 'title') {
             titlePropertyName = propName;
           }
