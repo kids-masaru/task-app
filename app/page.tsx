@@ -2,9 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar, CheckCircle, XCircle, Phone } from 'lucide-react';
+import { Loader2, Mic, Link as LinkIcon, Send, Database, Clock, Calendar, CheckCircle, XCircle, Phone, PlusCircle, LayoutList } from 'lucide-react';
+import { useSettings } from '@/hooks/useSettings';
+import Dashboard from '@/components/viewer/Dashboard';
+import SettingsModal from '@/components/viewer/SettingsModal';
 
 export default function Home() {
+  // Tab state
+  const [activeTab, setActiveTab] = useState<'create' | 'view'>('create');
+  
+  // Settings Hook
+  const { settings, isLoaded: isSettingsLoaded, updateSettings, updateDatabaseSettings } = useSettings();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const model = 'gemini-3-flash-preview';
@@ -225,9 +235,6 @@ export default function Home() {
       setText('');
       setUrl('');
       setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 1500);
     } catch (error: any) {
       setErrorMessage(error.message || 'タスクの作成に失敗しました');
       setShowError(true);
@@ -280,14 +287,41 @@ export default function Home() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900">
-            Task Manager
+            Task App
           </h1>
           <p className="text-neutral-500 text-sm sm:text-base">
-            Create tasks with AI-powered smart titles
+            Create and view your Notion tasks effortlessly
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 bg-white border border-neutral-200 rounded-lg p-4 sm:p-6 shadow-sm">
+        {/* Global Tabs Navigation */}
+        <div className="flex bg-neutral-100 p-1 rounded-xl shadow-inner max-w-sm mx-auto mb-6">
+          <button
+            onClick={() => setActiveTab('create')}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+              activeTab === 'create'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200/50'
+            }`}
+          >
+            <PlusCircle className="w-4 h-4" />
+            タスク作成
+          </button>
+          <button
+            onClick={() => setActiveTab('view')}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+              activeTab === 'view'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200/50'
+            }`}
+          >
+            <LayoutList className="w-4 h-4" />
+            タスク確認
+          </button>
+        </div>
+
+        {activeTab === 'create' ? (
+          <form onSubmit={handleSubmit} className="space-y-4 bg-white border border-neutral-200 rounded-lg p-4 sm:p-6 shadow-sm">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Date Selection */}
             <div className="space-y-2">
@@ -501,7 +535,32 @@ export default function Home() {
             )}
           </button>
         </form>
+        ) : (
+          <div className="bg-white border border-neutral-200 rounded-lg shadow-sm overflow-hidden min-h-[600px]">
+            {isSettingsLoaded ? (
+              <Dashboard
+                settings={settings}
+                onOpenSettings={() => setIsSettingsOpen(true)}
+                onUpdateDatabaseSettings={updateDatabaseSettings}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full min-h-[400px]">
+                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Settings Modal Setup */}
+      {isSettingsLoaded && (
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          settings={settings}
+          onUpdateSettings={updateSettings}
+        />
+      )}
 
       {/* Loading Overlay */}
       {isLoading && (
@@ -511,12 +570,16 @@ export default function Home() {
         </div>
       )}
 
-      {/* Success Overlay */}
+      {/* Success Overlay - tap anywhere to dismiss */}
       {showSuccess && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-200">
+        <div 
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-200 cursor-pointer"
+          onClick={() => setShowSuccess(false)}
+        >
           <div className="flex flex-col items-center p-8 bg-white rounded-2xl shadow-xl border border-neutral-100 transform scale-110">
             <CheckCircle className="w-16 h-16 text-green-500 mb-4 animate-bounce" />
             <p className="text-2xl font-bold text-neutral-800">完了！</p>
+            <p className="text-xs text-neutral-400 mt-4">タップして閉じる</p>
           </div>
         </div>
       )}

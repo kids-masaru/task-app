@@ -1,0 +1,37 @@
+﻿data_sources: [
+  {
+    "id": "016bfc2d-f3c9-41f7-b034-d39699f37e75",
+    "name": "繧ｿ繧ｹ繧ｯDB"
+  }
+]
+
+Data Source ID: 016bfc2d-f3c9-41f7-b034-d39699f37e75
+
+Data Source (2022-06-28): {
+  "object": "error",
+  "status": 400,
+  "code": "invalid_request_url",
+  "message": "Invalid request URL.",
+  "request_id": "65fca69c-6c53-42cd-b8a4-8faf55c1d6dd"
+}
+
+--- With Notion-Version 2022-06-28 ---
+Has properties: true
+  - "菴懈･ｭ譎る俣" => type: formula
+  - "譎る俣蜑ｲ蜷・ => type: formula
+  - "迯ｲ蠕・ => type: checkbox
+  - "莠域Φ譎る俣" => type: number
+  - "繧ｿ繧ｹ繧ｯ髢句ｧ・ => type: button
+  - "Date" => type: date
+  - "谺｡縺ｮ繧ｿ繧ｹ繧ｯ縺ｸ" => type: button
+  - "繧ｿ繧ｹ繧ｯ螳御ｺ・ => type: button
+  - "騾ｲ謐・ => type: status
+  - "繧ｯ繝ｩ繧､繧｢繝ｳ繝・ => type: relation
+  - "菴懈･ｭ鬆・ => type: select
+  - "菴懈・譌･譎・ => type: created_time
+  - "蟇ｾ蠢・ => type: select
+  - "髢句ｧ区凾蛻ｻ" => type: date
+  - "諡・ｽ・ => type: select
+  - "邨ゆｺ・凾蛻ｻ" => type: date
+  - "譎る俣蟶ｯ" => type: select
+  - "蜷榊燕" => type: title

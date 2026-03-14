@@ -1,0 +1,126 @@
+﻿
+============================================================
+Checking: 繧ｿ繧ｹ繧ｯDB (DB1)
+Database ID: 13b4dbc3b6118068af34c9b64014279f
+============================================================
+
+笨・databases.retrieve() succeeded
+Database title: 繧ｿ繧ｹ繧ｯDB
+笶・properties is null/undefined!
+Full response keys: [
+  'object',       'id',
+  'title',        'description',
+  'parent',       'is_inline',
+  'in_trash',     'is_locked',
+  'created_time', 'last_edited_time',
+  'data_sources', 'icon',
+  'cover',        'url',
+  'public_url',   'request_id'
+]
+Full response: {
+  "object": "database",
+  "id": "13b4dbc3-b611-8068-af34-c9b64014279f",
+  "title": [
+    {
+      "type": "text",
+      "text": {
+        "content": "繧ｿ繧ｹ繧ｯDB",
+        "link": null
+      },
+      "annotations": {
+        "bold": false,
+        "italic": false,
+        "strikethrough": false,
+        "underline": false,
+        "code": false,
+        "color": "default"
+      },
+      "plain_text": "繧ｿ繧ｹ繧ｯDB",
+      "href": null
+    }
+  ],
+  "description": [],
+  "parent": {
+    "type": "block_id",
+    "block_id": "13b4dbc3-b611-81fb-88a7-e71de6c8a0cb"
+  },
+  "is_inline": false,
+  "in_trash": false,
+  "is_locked": false,
+  "created_time": "2024-11-11T14:49:23.809+00:00",
+  "last_edited_time": "2026-02-19T04:40:48.969+00:00",
+  "data_sources": [
+    {
+      "id": "016bfc2d-f3c9-41f7-b034-d39699f37e75",
+      "name": "繧ｿ繧ｹ繧ｯDB"
+    }
+  ],
+  "icon": null,
+  "cover": null,
+  "url": "https://www.notion.so/13b4dbc3b6118068af34c9b64014279f",
+  "public_url": null,
+  "request_id": "36648b84-62bd-457e-b37c-22298a59282c"
+}
+
+============================================================
+Checking: 繧ｿ繧ｹ繧ｯ・医∪縺輔ｋ・吋B (DB2)
+Database ID: 14723595700780df8015fa258fb9d4e9
+============================================================
+
+笨・databases.retrieve() succeeded
+Database title: 繧ｿ繧ｹ繧ｯ・医∪縺輔ｋ・吋B
+笶・properties is null/undefined!
+Full response keys: [
+  'object',       'id',
+  'title',        'description',
+  'parent',       'is_inline',
+  'in_trash',     'is_locked',
+  'created_time', 'last_edited_time',
+  'data_sources', 'icon',
+  'cover',        'url',
+  'public_url',   'request_id'
+]
+Full response: {
+  "object": "database",
+  "id": "14723595-7007-80df-8015-fa258fb9d4e9",
+  "title": [
+    {
+      "type": "text",
+      "text": {
+        "content": "繧ｿ繧ｹ繧ｯ・医∪縺輔ｋ・吋B",
+        "link": null
+      },
+      "annotations": {
+        "bold": false,
+        "italic": false,
+        "strikethrough": false,
+        "underline": false,
+        "code": false,
+        "color": "default"
+      },
+      "plain_text": "繧ｿ繧ｹ繧ｯ・医∪縺輔ｋ・吋B",
+      "href": null
+    }
+  ],
+  "description": [],
+  "parent": {
+    "type": "block_id",
+    "block_id": "14723595-7007-8071-8e20-e6fea3ca3de8"
+  },
+  "is_inline": false,
+  "in_trash": false,
+  "is_locked": false,
+  "created_time": "2024-11-23T16:11:58.007+00:00",
+  "last_edited_time": "2026-02-14T06:52:26.031+00:00",
+  "data_sources": [
+    {
+      "id": "93b15ac6-4f58-497e-97da-36d29217926d",
+      "name": "繧ｿ繧ｹ繧ｯ・医∪縺輔ｋ・吋B"
+    }
+  ],
+  "icon": null,
+  "cover": null,
+  "url": "https://www.notion.so/14723595700780df8015fa258fb9d4e9",
+  "public_url": null,
+  "request_id": "9bdc82cb-9a85-45f4-9815-9c8feeb492a6"
+}

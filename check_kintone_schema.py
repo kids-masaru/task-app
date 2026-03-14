@@ -2,10 +2,16 @@ import requests
 import json
 import os
 
-# Configuration (using values from kintone_notion_app/.env)
-BASE_URL = "https://n2amf.cybozu.com"
-APP_ID = "52"
-API_TOKEN = "MKIsBor99WYeG1uAEkV3ADZllkRKHRg6zAojyF8X"
+from dotenv import load_dotenv
+
+# Load .env.local first (common for Next.js projects), fallback to .env
+load_dotenv(".env.local")
+load_dotenv()
+
+# Configuration (using values from environment variables)
+BASE_URL = os.getenv("KINTONE_BASE_URL", "https://n2amf.cybozu.com")
+APP_ID = os.getenv("KINTONE_APP_ID", "52")
+API_TOKEN = os.getenv("KINTONE_API_TOKEN")
 
 def fetch_schema():
     url = f"{BASE_URL}/k/v1/app/form/fields.json"
