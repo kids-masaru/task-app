@@ -144,15 +144,75 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
         }
     };
 
-    const handleUpdateViewSettings = (newSettings: Partial<DatabaseSettings>) => {
+    const handleUpdateViewSettings = async (newSettings: Partial<DatabaseSettings>) => {
         if (!activeDatabase) return;
         
+        const updatedVisibleProperties = newSettings.visibleProperties !== undefined ? newSettings.visibleProperties : visibleProperties;
+        const updatedPropertyFilters = newSettings.propertyFilters !== undefined ? newSettings.propertyFilters : propertyFilters;
+        const updatedSort = newSettings.sort !== undefined ? newSettings.sort : sort;
+
         if (newSettings.visibleProperties !== undefined) setVisibleProperties(newSettings.visibleProperties);
         if (newSettings.propertyFilters !== undefined) setPropertyFilters(newSettings.propertyFilters);
         if (newSettings.sort !== undefined) setSort(newSettings.sort);
         
         onUpdateDatabaseSettings(activeDatabase.id, newSettings);
+
+        // Sync to Notion Description
+        try {
+            const configPayload = {
+                visibleProperties: updatedVisibleProperties,
+                propertyFilters: updatedPropertyFilters,
+                sort: updatedSort
+            };
+            const configString = `#CONFIG_START#${JSON.stringify(configPayload)}#CONFIG_END#`;
+            
+            await fetch('/api/notion/meta', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${settings.apiKey}`,
+                },
+                body: JSON.stringify({
+                    database_id: activeDatabase.id,
+                    description: configString
+                }),
+            });
+            console.log('[Sync] Settings synced to Notion');
+        } catch (e) {
+            console.error('[Sync] Failed to sync to Notion', e);
+        }
     };
+
+    // Notion Sync on Load
+    useEffect(() => {
+        const syncFromNotion = async () => {
+            if (!activeDatabase || !settings.apiKey) return;
+            try {
+                const res = await fetch('/api/notion/meta', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${settings.apiKey}`,
+                    },
+                    body: JSON.stringify({ database_id: activeDatabase.id }),
+                });
+                const meta = await res.json();
+                if (meta.parsedConfig) {
+                    console.log('[Sync] Loaded settings from Notion:', meta.parsedConfig);
+                    const config = meta.parsedConfig;
+                    if (config.visibleProperties) setVisibleProperties(config.visibleProperties);
+                    if (config.propertyFilters) setPropertyFilters(config.propertyFilters);
+                    if (config.sort) setSort(config.sort);
+                    
+                    onUpdateDatabaseSettings(activeDatabase.id, config);
+                }
+            } catch (e) {
+                console.error('[Sync] Failed to load from Notion', e);
+            }
+        };
+
+        syncFromNotion();
+    }, [activeTabId, settings.apiKey]); // Run once when tab or API key changes
 
     // Apply property filters first
     const propertyFilteredData = data.filter((item) => {
