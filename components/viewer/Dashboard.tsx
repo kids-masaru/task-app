@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Settings as SettingsIcon, LayoutGrid, List as ListIcon, ArrowUpDown, RefreshCw } from 'lucide-react';
 import { Settings } from '@/hooks/useSettings';
-import CardView from './CardView';
 import ListView from './ListView';
 import TaskDetailModal from './TaskDetailModal';
 import FilterBar from './FilterBar';
@@ -351,17 +350,7 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                 );
             }
 
-            if (activeDatabase.viewType === 'card') {
-                return (
-                    <CardView
-                        items={filteredData}
-                        onTaskClick={setModalTask}
-                        visibleProperties={visibleProperties}
-                        onStatusChange={updateTaskStatus}
-                        apiKey={settings.apiKey}
-                    />
-                );
-            }
+            // Force ListView for all databases to meet the Ergonomic/Single-Column requirement
             return (
                 <ListView
                     items={filteredData}
