@@ -2,21 +2,29 @@ import { useState, useEffect } from 'react';
 
 export type ViewType = 'card' | 'list';
 
-export interface DatabaseConfig {
-    id: string;
-    name: string;
-    viewType: ViewType;
+export interface SortOption {
+    property: string;
+    direction: 'ascending' | 'descending';
 }
 
-export interface WidgetConfig {
-    id: string;
-    name: string;
-    url: string;
+export interface PropertyFilter {
+    propertyName: string;
+    propertyType: string;
+    condition: string;
+    values?: string[];
 }
 
 export interface DatabaseSettings {
     visibleProperties?: string[];
     filterProperties?: string[];
+    sort?: SortOption;
+    propertyFilters?: PropertyFilter[];
+}
+
+export interface DatabaseConfig {
+    id: string;
+    name: string;
+    viewType: ViewType;
 }
 
 export interface Settings {
@@ -138,12 +146,13 @@ export function useSettings() {
         updateSettings({ widgets: settings.widgets.filter((w) => w.id !== id) });
     };
 
-    const updateDatabaseSettings = (dbId: string, dbSettings: DatabaseSettings) => {
+    const updateDatabaseSettings = (dbId: string, dbSettings: Partial<DatabaseSettings>) => {
         setSettings((prev) => {
+            const currentDbSettings = prev.databaseSettings[dbId] || {};
             const newDatabaseSettings = {
                 ...prev.databaseSettings,
                 [dbId]: {
-                    ...prev.databaseSettings[dbId],
+                    ...currentDbSettings,
                     ...dbSettings,
                 },
             };
@@ -154,7 +163,6 @@ export function useSettings() {
             };
 
             console.log('Updating database settings:', dbId, dbSettings);
-            console.log('New settings:', updated);
             localStorage.setItem('notion-viewer-settings', JSON.stringify(updated));
             return updated;
         });

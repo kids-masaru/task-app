@@ -1,18 +1,15 @@
+```typescript
 import React, { useState, useEffect, useCallback } from 'react';
 import { Settings as SettingsIcon, LayoutGrid, List as ListIcon, ArrowUpDown, RefreshCw } from 'lucide-react';
-import { Settings } from '@/hooks/useSettings';
-import ListView from './ListView';
-import TaskDetailModal from './TaskDetailModal';
-import FilterBar from './FilterBar';
-import PropertyFilters, { PropertyFilter } from './PropertyFilters';
-import PropertySelector from './PropertySelector';
-import SortSelector from './SortSelector';
-import FilterPropertySelector from './FilterPropertySelector';
+import { Settings, DatabaseSettings, SortOption, PropertyFilter } from '@/hooks/useSettings';
+import ViewConfigDrawer from './ViewConfigDrawer';
+import TaskDetailModal from './TaskDetailModal'; // Keep TaskDetailModal as it's not explicitly removed and might be used later
+import ListView from './ListView'; // Keep ListView as it's the main view component
 
 interface DashboardProps {
     settings: Settings;
     onOpenSettings: () => void;
-    onUpdateDatabaseSettings: (dbId: string, settings: { visibleProperties?: string[]; filterProperties?: string[] }) => void;
+    onUpdateDatabaseSettings: (dbId: string, settings: { visibleProperties?: string[]; filterProperties?: string[]; propertyFilters?: PropertyFilter[]; sort?: SortOption }) => void;
 }
 
 export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSettings }: DashboardProps) {
@@ -22,12 +19,15 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
     const [error, setError] = useState<string | null>(null);
     const [modalTask, setModalTask] = useState<any | null>(null);
     const [filterText, setFilterText] = useState('');
-    const [propertyFilters, setPropertyFilters] = useState<PropertyFilter[]>([]);
     const [visibleProperties, setVisibleProperties] = useState<string[]>([]);
     const [filterProperties, setFilterProperties] = useState<string[]>([]);
-    const [sort, setSort] = useState<{ property: string; direction: 'ascending' | 'descending' }>({
-        property: 'created_time',
-        direction: 'descending'
+    const [propertyFilters, setPropertyFilters] = useState<PropertyFilter[]>(() => {
+        if (!activeTabId) return [];
+        return settings.databaseSettings[activeTabId]?.propertyFilters || [];
+    });
+    const [sort, setSort] = useState<SortOption>(() => {
+        if (!activeTabId) return { property: 'Last edited time', direction: 'descending' };
+        return settings.databaseSettings[activeTabId]?.sort || { property: 'Last edited time', direction: 'descending' };
     });
     const [isWidgetsOnTop, setIsWidgetsOnTop] = useState(true);
     const [showViewSettings, setShowViewSettings] = useState(false);
@@ -160,20 +160,14 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
         }
     };
 
-    const handleVisiblePropertiesChange = (properties: string[]) => {
-        setVisibleProperties(properties);
-        // Persist to local settings
-        if (activeDatabase) {
-            onUpdateDatabaseSettings(activeDatabase.id, { visibleProperties: properties });
-        }
-    };
-
-    const handleFilterPropertiesChange = (properties: string[]) => {
-        setFilterProperties(properties);
-        // Persist to local settings
-        if (activeDatabase) {
-            onUpdateDatabaseSettings(activeDatabase.id, { filterProperties: properties });
-        }
+    const handleUpdateViewSettings = (newSettings: Partial<DatabaseSettings>) => {
+        if (!activeDatabase) return;
+        
+        if (newSettings.visibleProperties !== undefined) setVisibleProperties(newSettings.visibleProperties);
+        if (newSettings.propertyFilters !== undefined) setPropertyFilters(newSettings.propertyFilters);
+        if (newSettings.sort !== undefined) setSort(newSettings.sort);
+        
+        onUpdateDatabaseSettings(activeDatabase.id, newSettings);
     };
 
     // Apply property filters first
