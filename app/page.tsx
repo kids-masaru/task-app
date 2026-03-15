@@ -98,6 +98,8 @@ export default function Home() {
   ];
 
   useEffect(() => {
+    if (!isSettingsLoaded) return;
+
     // Load saved settings from localStorage
     const savedDatabase = localStorage.getItem('taskapp_default_database');
     const savedTimeSlot = localStorage.getItem('taskapp_default_timeslot');
@@ -114,6 +116,18 @@ export default function Home() {
           } else if (data.databases.length > 0) {
             setDatabaseId(data.databases[0].id);
           }
+
+          // NEW: Automatically populate viewer settings if empty
+          if (settings && settings.databases && settings.databases.length === 0 && data.databases.length > 0) {
+            console.log('Automatically initializing viewer settings with databases:', data.databases);
+            updateSettings({
+              databases: data.databases.map((db: any) => ({
+                id: db.id,
+                name: db.name,
+                viewType: 'card'
+              }))
+            });
+          }
         }
       })
       .catch(err => console.error('Failed to fetch databases:', err));
@@ -122,7 +136,7 @@ export default function Home() {
     if (savedTimeSlot) {
       setTimeSlot(savedTimeSlot);
     }
-  }, []);
+  }, [isSettingsLoaded]);
 
   // Fetch relation pages when database changes
   useEffect(() => {
