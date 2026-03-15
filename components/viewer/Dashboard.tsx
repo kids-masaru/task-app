@@ -351,9 +351,9 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                 );
             }
 
-            if (activeDatabase.viewType === 'list') {
+            if (activeDatabase.viewType === 'card') {
                 return (
-                    <ListView
+                    <CardView
                         items={filteredData}
                         onTaskClick={setModalTask}
                         visibleProperties={visibleProperties}
@@ -363,7 +363,7 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                 );
             }
             return (
-                <CardView
+                <ListView
                     items={filteredData}
                     onTaskClick={setModalTask}
                     visibleProperties={visibleProperties}
@@ -389,31 +389,27 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
     };
 
     return (
-        <div className="min-h-screen pb-20">
+        <div className="min-h-screen bg-gray-50 pb-20 font-sans">
             {/* Header */}
-            <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between mb-4">
-                <h1 className="text-xl font-bold text-gray-900 tracking-tight">My Dashboard</h1>
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => setIsWidgetsOnTop(!isWidgetsOnTop)}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600"
-                        title="Swap Layout"
-                    >
-                        <ArrowUpDown className="w-5 h-5" />
-                    </button>
+            <header className="sticky top-0 z-30 bg-gray-50/80 backdrop-blur-xl border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-black text-gray-900 tracking-tight">Tasks</h1>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Notion Task Manager</p>
+                </div>
+                <div className="flex items-center gap-3">
                     <button
                         onClick={handleRefresh}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600"
+                        className="p-2.5 bg-white shadow-sm border border-gray-100 rounded-full transition-all hover:shadow-md active:scale-90"
                         title="Refresh Data"
                         disabled={loading}
                     >
-                        <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+                        <RefreshCw className={`w-4 h-4 text-gray-600 ${loading ? 'animate-spin' : ''}`} />
                     </button>
                     <button
                         onClick={onOpenSettings}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                        className="p-2.5 bg-white shadow-sm border border-gray-100 rounded-full transition-all hover:shadow-md active:scale-90"
                     >
-                        <SettingsIcon className="w-5 h-5 text-gray-600" />
+                        <SettingsIcon className="w-4 h-4 text-gray-600" />
                     </button>
                 </div>
             </header>
