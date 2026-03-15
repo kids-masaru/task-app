@@ -32,15 +32,29 @@ export async function POST(req: NextRequest) {
       console.log(`[Notion API] Could not extract 32-char ID, using raw value: ${databaseId}`);
     }
 
-    // ここにNotion API呼び出しロジックを追加する必要がありますが、
-    // 現状はデータベースIDの抽出までで終わっているようです。
-    // ひとまずエラーを返さないように正常なレスポンスを返すか、
-    // 実装が途中であることを示します。
-
-    return NextResponse.json({
-      message: 'Database ID extracted successfully',
-      databaseId: databaseId
+    // Notion APIを呼び出してデータベースのレコードを取得
+    const notionResponse = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Notion-Version': '2022-06-28',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        filter: filter,
+        sorts: sorts,
+      }),
     });
+
+    const data = await notionResponse.json();
+
+    if (!notionResponse.ok) {
+      console.error('[Notion API] Error from Notion:', data);
+      return NextResponse.json(data, { status: notionResponse.status });
+    }
+
+    console.log(`[Notion API] Success: Fetched ${data.results?.length || 0} items`);
+    return NextResponse.json(data);
 
   } catch (error) {
     console.error('[Notion API] Error:', error);
