@@ -11,11 +11,8 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ pages: [] });
         }
 
-        // Select API key based on main database
-        let apiKey = process.env.NOTION_API_KEY;
-        if (mainDbId === process.env.NOTION_DATABASE_ID_2 && process.env.NOTION_API_KEY_2) {
-            apiKey = process.env.NOTION_API_KEY_2;
-        }
+        // Use main API key
+        const apiKey = process.env.NOTION_API_KEY;
 
         // Remove hyphens for Notion API (expects 32-char ID without hyphens)
         const cleanDbId = relationDbId.replace(/-/g, '');
@@ -29,7 +26,7 @@ export async function GET(req: NextRequest) {
             // Use fetch directly to call Notion API (avoiding SDK compatibility issues)
             const notionApiUrl = `https://api.notion.com/v1/databases/${cleanDbId}/query`;
 
-            // Only apply filter for the first database (タスクDB)
+            // Apply filter only for main database
             const shouldFilter = mainDbId === process.env.NOTION_DATABASE_ID;
 
             const requestBody: any = {

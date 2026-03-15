@@ -66,15 +66,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to parse AI response' }, { status: 500 });
     }
 
-    // 2. Save each task to Notion
-    // Select the appropriate API key based on the database
-    let notionApiKey = process.env.NOTION_API_KEY;
+    // Use the main API key
+    const notionApiKey = process.env.NOTION_API_KEY;
     const targetDatabaseId = databaseId || process.env.NOTION_DATABASE_ID;
-
-    // If using the second database, use the second API key
-    if (targetDatabaseId === process.env.NOTION_DATABASE_ID_2 && process.env.NOTION_API_KEY_2) {
-      notionApiKey = process.env.NOTION_API_KEY_2;
-    }
 
     const notion = new Client({ auth: notionApiKey });
 
@@ -195,8 +189,6 @@ export async function POST(req: NextRequest) {
         // Determine which relation property to use based on database
         if (targetDatabaseId === process.env.NOTION_DATABASE_ID) {
           relationPropertyName = process.env.NOTION_RELATION_PROPERTY_1 || "クライアント";
-        } else if (targetDatabaseId === process.env.NOTION_DATABASE_ID_2) {
-          relationPropertyName = process.env.NOTION_RELATION_PROPERTY_2 || "クライアントDB";
         }
 
         if (relationPropertyName) {

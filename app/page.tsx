@@ -339,7 +339,7 @@ export default function Home() {
             </div>
 
             {/* Time Slot - Only show for databases that support it */}
-            {databaseId === (process.env.NEXT_PUBLIC_DATABASE_WITH_TIMESLOT || databases[0]?.id) && (
+            {(databaseId === process.env.NEXT_PUBLIC_DATABASE_WITH_TIMESLOT || !process.env.NEXT_PUBLIC_DATABASE_WITH_TIMESLOT) && (
               <div className="space-y-2">
                 <label htmlFor="timeSlot" className="text-sm font-medium text-neutral-700 flex items-center gap-2">
                   <Clock className="w-4 h-4" />
@@ -360,8 +360,8 @@ export default function Home() {
               </div>
             )}
 
-            {/* Database Selection */}
-            {databases.length > 0 && (
+            {/* Database Selection - Only show if multiple databases exist (will be hidden now) */}
+            {databases.length > 1 && (
               <div className="space-y-2">
                 <label htmlFor="database" className="text-sm font-medium text-neutral-700 flex items-center gap-2">
                   <Database className="w-4 h-4" />
@@ -388,7 +388,7 @@ export default function Home() {
             <div className="space-y-2">
               <label htmlFor="relation" className="text-sm font-medium text-neutral-700 flex items-center gap-2">
                 <Database className="w-4 h-4" />
-                {databases.findIndex(db => db.id === databaseId) === 0 ? 'クライアント' : 'クライアントDB'}
+                クライアント
               </label>
 
               {/* Searchable Dropdown */}
