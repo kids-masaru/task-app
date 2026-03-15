@@ -27,6 +27,12 @@ export interface DatabaseConfig {
     viewType: ViewType;
 }
 
+export interface WidgetConfig {
+    id: string;
+    name: string;
+    url: string;
+}
+
 export interface Settings {
     apiKey: string;
     databases: DatabaseConfig[];

@@ -1,15 +1,15 @@
-```typescript
 import React, { useState, useEffect, useCallback } from 'react';
-import { Settings as SettingsIcon, LayoutGrid, List as ListIcon, ArrowUpDown, RefreshCw } from 'lucide-react';
+import { Settings as SettingsIcon, LayoutGrid, List as ListIcon, RefreshCw } from 'lucide-react';
 import { Settings, DatabaseSettings, SortOption, PropertyFilter } from '@/hooks/useSettings';
 import ViewConfigDrawer from './ViewConfigDrawer';
-import TaskDetailModal from './TaskDetailModal'; // Keep TaskDetailModal as it's not explicitly removed and might be used later
-import ListView from './ListView'; // Keep ListView as it's the main view component
+import TaskDetailModal from './TaskDetailModal';
+import ListView from './ListView';
+import FilterBar from './FilterBar';
 
 interface DashboardProps {
     settings: Settings;
     onOpenSettings: () => void;
-    onUpdateDatabaseSettings: (dbId: string, settings: { visibleProperties?: string[]; filterProperties?: string[]; propertyFilters?: PropertyFilter[]; sort?: SortOption }) => void;
+    onUpdateDatabaseSettings: (dbId: string, settings: Partial<DatabaseSettings>) => void;
 }
 
 export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSettings }: DashboardProps) {
@@ -20,15 +20,8 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
     const [modalTask, setModalTask] = useState<any | null>(null);
     const [filterText, setFilterText] = useState('');
     const [visibleProperties, setVisibleProperties] = useState<string[]>([]);
-    const [filterProperties, setFilterProperties] = useState<string[]>([]);
-    const [propertyFilters, setPropertyFilters] = useState<PropertyFilter[]>(() => {
-        if (!activeTabId) return [];
-        return settings.databaseSettings[activeTabId]?.propertyFilters || [];
-    });
-    const [sort, setSort] = useState<SortOption>(() => {
-        if (!activeTabId) return { property: 'Last edited time', direction: 'descending' };
-        return settings.databaseSettings[activeTabId]?.sort || { property: 'Last edited time', direction: 'descending' };
-    });
+    const [propertyFilters, setPropertyFilters] = useState<PropertyFilter[]>([]);
+    const [sort, setSort] = useState<SortOption>({ property: 'Last edited time', direction: 'descending' });
     const [isWidgetsOnTop, setIsWidgetsOnTop] = useState(true);
     const [showViewSettings, setShowViewSettings] = useState(false);
 
@@ -39,22 +32,13 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
         }
     }, [settings.databases, activeTabId]);
 
-    // Load visible properties from settings when active tab changes
+    // Load all settings when active tab changes
     useEffect(() => {
-        if (activeTabId && settings.databaseSettings?.[activeTabId]?.visibleProperties) {
-            setVisibleProperties(settings.databaseSettings[activeTabId].visibleProperties!);
-        } else {
-            setVisibleProperties([]);
-        }
-    }, [activeTabId, settings.databaseSettings]);
-
-    // Load filter properties from settings when active tab changes
-    useEffect(() => {
-        if (activeTabId && settings.databaseSettings?.[activeTabId]?.filterProperties) {
-            setFilterProperties(settings.databaseSettings[activeTabId].filterProperties!);
-        } else {
-            // Default to all filterable properties
-            setFilterProperties([]);
+        if (activeTabId) {
+            const dbSettings = settings.databaseSettings[activeTabId] || {};
+            setVisibleProperties(dbSettings.visibleProperties || []);
+            setPropertyFilters(dbSettings.propertyFilters || []);
+            setSort(dbSettings.sort || { property: 'Last edited time', direction: 'descending' });
         }
     }, [activeTabId, settings.databaseSettings]);
 
@@ -439,40 +423,23 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                                         totalCount={data.length}
                                         onToggleSettings={() => setShowViewSettings(!showViewSettings)}
                                         isSettingsOpen={showViewSettings}
-                                    >
-                                        {showViewSettings && (
-                                            <>
-                                                <PropertySelector
-                                                    data={data}
-                                                    visibleProperties={visibleProperties}
-                                                    onChange={handleVisiblePropertiesChange}
-                                                />
-                                                <SortSelector
-                                                    properties={data.length > 0 ? Object.keys(data[0].properties) : []}
-                                                    currentSort={sort}
-                                                    onSortChange={setSort}
-                                                />
-                                                <FilterPropertySelector
-                                                    availableProperties={data.length > 0 ?
-                                                        Object.entries(data[0].properties).map(([name, prop]: [string, any]) => ({
-                                                            name,
-                                                            type: prop.type
-                                                        })) : []
-                                                    }
-                                                    selectedFilterProperties={filterProperties}
-                                                    onChange={handleFilterPropertiesChange}
-                                                />
-                                            </>
-                                        )}
-                                    </FilterBar>
-                                    {showViewSettings && (
-                                        <PropertyFilters
-                                            data={data}
-                                            activeFilters={propertyFilters}
-                                            onFilterChange={setPropertyFilters}
-                                            selectedFilterProperties={filterProperties}
-                                        />
-                                    )}
+                                    />
+                                    
+                                    <ViewConfigDrawer
+                                        isOpen={showViewSettings}
+                                        onClose={() => setShowViewSettings(false)}
+                                        data={data}
+                                        settings={activeDatabase ? (settings.databaseSettings[activeDatabase.id] || {
+                                            visibleProperties,
+                                            propertyFilters,
+                                            sort
+                                        }) : {
+                                            visibleProperties: [],
+                                            propertyFilters: [],
+                                            sort: { property: 'Last edited time', direction: 'descending' }
+                                        }}
+                                        onUpdateSettings={handleUpdateViewSettings}
+                                    />
                                 </div>
                             )}
 
@@ -518,40 +485,23 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                                         totalCount={data.length}
                                         onToggleSettings={() => setShowViewSettings(!showViewSettings)}
                                         isSettingsOpen={showViewSettings}
-                                    >
-                                        {showViewSettings && (
-                                            <>
-                                                <PropertySelector
-                                                    data={data}
-                                                    visibleProperties={visibleProperties}
-                                                    onChange={handleVisiblePropertiesChange}
-                                                />
-                                                <SortSelector
-                                                    properties={data.length > 0 ? Object.keys(data[0].properties) : []}
-                                                    currentSort={sort}
-                                                    onSortChange={setSort}
-                                                />
-                                                <FilterPropertySelector
-                                                    availableProperties={data.length > 0 ?
-                                                        Object.entries(data[0].properties).map(([name, prop]: [string, any]) => ({
-                                                            name,
-                                                            type: prop.type
-                                                        })) : []
-                                                    }
-                                                    selectedFilterProperties={filterProperties}
-                                                    onChange={handleFilterPropertiesChange}
-                                                />
-                                            </>
-                                        )}
-                                    </FilterBar>
-                                    {showViewSettings && (
-                                        <PropertyFilters
-                                            data={data}
-                                            activeFilters={propertyFilters}
-                                            onFilterChange={setPropertyFilters}
-                                            selectedFilterProperties={filterProperties}
-                                        />
-                                    )}
+                                    />
+                                    
+                                    <ViewConfigDrawer
+                                        isOpen={showViewSettings}
+                                        onClose={() => setShowViewSettings(false)}
+                                        data={data}
+                                        settings={activeDatabase ? (settings.databaseSettings[activeDatabase.id] || {
+                                            visibleProperties,
+                                            propertyFilters,
+                                            sort
+                                        }) : {
+                                            visibleProperties: [],
+                                            propertyFilters: [],
+                                            sort: { property: 'Last edited time', direction: 'descending' }
+                                        }}
+                                        onUpdateSettings={handleUpdateViewSettings}
+                                    />
                                 </div>
                             )}
 
