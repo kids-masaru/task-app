@@ -21,7 +21,7 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
     const [filterText, setFilterText] = useState('');
     const [visibleProperties, setVisibleProperties] = useState<string[]>([]);
     const [propertyFilters, setPropertyFilters] = useState<PropertyFilter[]>([]);
-    const [sort, setSort] = useState<SortOption>({ property: 'Last edited time', direction: 'descending' });
+    const [sort, setSort] = useState<SortOption>({ property: 'last_edited_time', direction: 'descending' });
     const [isWidgetsOnTop, setIsWidgetsOnTop] = useState(true);
     const [showViewSettings, setShowViewSettings] = useState(false);
 
@@ -61,8 +61,8 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                     // Add sorts or filters if needed
                     sorts: [
                         {
-                            property: sort.property === 'created_time' ? undefined : sort.property,
-                            timestamp: sort.property === 'created_time' ? 'created_time' : undefined,
+                            property: (sort.property === 'created_time' || sort.property === 'last_edited_time' || sort.property === 'Last edited time') ? undefined : sort.property,
+                            timestamp: sort.property === 'created_time' ? 'created_time' : (sort.property === 'last_edited_time' || sort.property === 'Last edited time' ? 'last_edited_time' : undefined),
                             direction: sort.direction,
                         },
                     ],
