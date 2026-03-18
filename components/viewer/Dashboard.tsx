@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Settings as SettingsIcon, LayoutGrid, List as ListIcon, RefreshCw } from 'lucide-react';
+import { Settings as SettingsIcon, LayoutGrid, List as ListIcon, RefreshCw, Activity, X } from 'lucide-react';
 import { Settings, DatabaseSettings, SortOption, PropertyFilter } from '@/hooks/useSettings';
 import ViewConfigDrawer from './ViewConfigDrawer';
 import TaskDetailModal from './TaskDetailModal';
@@ -25,6 +25,7 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
     const [sort, setSort] = useState<SortOption>({ property: 'last_edited_time', direction: 'descending' });
     const [isWidgetsOnTop, setIsWidgetsOnTop] = useState(true);
     const [showViewSettings, setShowViewSettings] = useState(false);
+    const [showSyncPopup, setShowSyncPopup] = useState(false);
 
     // Set initial active tab (only databases)
     useEffect(() => {
@@ -425,6 +426,28 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Notion Task Manager</p>
                 </div>
                 <div className="flex items-center gap-3">
+                    {settings.notionSyncLogDbId && (
+                        <div className="relative">
+                            <button
+                                onClick={() => setShowSyncPopup(!showSyncPopup)}
+                                className={`p-2.5 shadow-sm border rounded-full transition-all hover:shadow-md active:scale-90 ${
+                                    showSyncPopup ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-gray-100 text-gray-600'
+                                }`}
+                                title="Kintone Sync Status"
+                            >
+                                <Activity className="w-4 h-4" />
+                            </button>
+                            
+                            {showSyncPopup && (
+                                <>
+                                    <div className="fixed inset-0 z-40" onClick={() => setShowSyncPopup(false)} />
+                                    <div className="absolute right-0 mt-3 w-[320px] sm:w-[380px] z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                                        <SyncStatusWidget apiKey={settings.apiKey} logDatabaseId={settings.notionSyncLogDbId} />
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    )}
                     <button
                         onClick={handleRefresh}
                         className="p-2.5 bg-white shadow-sm border border-gray-100 rounded-full transition-all hover:shadow-md active:scale-90"
@@ -446,12 +469,6 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                 {isWidgetsOnTop ? (
                     <>
                         {renderWidgets()}
-
-                        {settings.notionSyncLogDbId && (
-                            <div className="px-4 mb-6">
-                                <SyncStatusWidget apiKey={settings.apiKey} logDatabaseId={settings.notionSyncLogDbId} />
-                            </div>
-                        )}
 
                         {/* Database Section */}
                         <div className="px-4">

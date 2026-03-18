@@ -300,12 +300,7 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900">
-            Task App
-          </h1>
-          <p className="text-neutral-500 text-sm sm:text-base">
-            Create and view your Notion tasks effortlessly
-          </p>
+          {/* Removed Task App title and description per user request */}
         </div>
 
         {/* Global Tabs Navigation */}
