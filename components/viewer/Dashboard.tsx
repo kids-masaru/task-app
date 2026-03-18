@@ -5,6 +5,7 @@ import ViewConfigDrawer from './ViewConfigDrawer';
 import TaskDetailModal from './TaskDetailModal';
 import ListView from './ListView';
 import FilterBar from './FilterBar';
+import SyncStatusWidget from '../widgets/SyncStatusWidget';
 
 interface DashboardProps {
     settings: Settings;
@@ -445,6 +446,12 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                 {isWidgetsOnTop ? (
                     <>
                         {renderWidgets()}
+
+                        {settings.notionSyncLogDbId && (
+                            <div className="px-4 mb-6">
+                                <SyncStatusWidget apiKey={settings.apiKey} logDatabaseId={settings.notionSyncLogDbId} />
+                            </div>
+                        )}
 
                         {/* Database Section */}
                         <div className="px-4">

@@ -38,6 +38,7 @@ export interface Settings {
     databases: DatabaseConfig[];
     widgets: WidgetConfig[];
     databaseSettings: Record<string, DatabaseSettings>;
+    notionSyncLogDbId?: string;
 }
 
 const EMPTY_SETTINGS: Settings = {
@@ -75,6 +76,7 @@ function loadDefaultConfig(): Settings {
             databases,
             widgets,
             databaseSettings: {},
+            notionSyncLogDbId: process.env.NEXT_PUBLIC_NOTION_SYNC_LOG_DB_ID || '',
         };
     } catch (e) {
         console.error('Failed to load default config:', e);
@@ -104,6 +106,7 @@ export function useSettings() {
                                 ? parsedSettings.widgets
                                 : defaultConfig.widgets,
                             databaseSettings: parsedSettings.databaseSettings || {},
+                            notionSyncLogDbId: parsedSettings.notionSyncLogDbId || defaultConfig.notionSyncLogDbId,
                         });
                     } catch (e) {
                         console.error('Failed to parse settings', e);

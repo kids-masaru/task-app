@@ -16,6 +16,7 @@ export default function SettingsModal({
     onUpdateSettings,
 }: SettingsModalProps) {
     const [apiKey, setApiKey] = useState(settings.apiKey);
+    const [notionSyncLogDbId, setNotionSyncLogDbId] = useState(settings.notionSyncLogDbId || '');
     const [databases, setDatabases] = useState<DatabaseConfig[]>(settings.databases);
     const [widgets, setWidgets] = useState<WidgetConfig[]>(settings.widgets);
 
@@ -29,7 +30,7 @@ export default function SettingsModal({
     if (!isOpen) return null;
 
     const handleSave = () => {
-        onUpdateSettings({ apiKey, databases, widgets });
+        onUpdateSettings({ apiKey, databases, widgets, notionSyncLogDbId });
         onClose();
     };
 
@@ -87,6 +88,21 @@ export default function SettingsModal({
                         />
                         <p className="text-xs text-gray-500 mt-1">
                             Stored locally in your browser.
+                        </p>
+                    </section>
+
+                    {/* Kintone Sync Log Section */}
+                    <section>
+                        <h3 className="text-sm font-semibold text-gray-900 mb-2">Kintone Sync Log Database ID</h3>
+                        <input
+                            type="text"
+                            value={notionSyncLogDbId}
+                            onChange={(e) => setNotionSyncLogDbId(e.target.value)}
+                            placeholder="Enter Notion Database ID for sync logs"
+                            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all font-mono text-sm"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                            Used to display sync status on the dashboard.
                         </p>
                     </section>
 
