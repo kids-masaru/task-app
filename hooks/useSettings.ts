@@ -106,7 +106,7 @@ export function useSettings() {
                                 ? parsedSettings.widgets
                                 : defaultConfig.widgets,
                             databaseSettings: parsedSettings.databaseSettings || {},
-                            notionSyncLogDbId: process.env.NEXT_PUBLIC_NOTION_SYNC_LOG_DB_ID || parsedSettings.notionSyncLogDbId || defaultConfig.notionSyncLogDbId,
+                            notionSyncLogDbId: process.env.NEXT_PUBLIC_NOTION_SYNC_LOG_DB_ID || parsedSettings.notionSyncLogDbId || defaultConfig.notionSyncLogDbId || '',
                         });
                     } catch (e) {
                         console.error('Failed to parse settings', e);

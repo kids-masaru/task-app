@@ -86,7 +86,17 @@ export default function SyncStatusWidget({ apiKey, logDatabaseId }: SyncStatusWi
                     <>
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-[10px] text-gray-400 font-medium">Last Sync: {latestLog.date}</div>
+                                <div className="text-[10px] text-gray-400 font-medium flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    Last Sync: {(() => {
+                                        const now = new Date();
+                                        const syncDate = new Date(latestLog.date);
+                                        const diffDays = Math.floor((now.getTime() - syncDate.getTime()) / (1000 * 60 * 60 * 24));
+                                        if (diffDays === 0) return 'Today';
+                                        if (diffDays === 1) return 'Yesterday';
+                                        return latestLog.date;
+                                    })()}
+                                </div>
                                 <div className="text-xl font-black text-gray-900 leading-tight">
                                     {latestLog.createdA + latestLog.updatedA + latestLog.createdB + latestLog.updatedB} <span className="text-xs font-normal text-gray-400">items</span>
                                 </div>
