@@ -439,8 +439,9 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                             
                             {showSyncPopup && (
                                 <>
-                                    <div className="fixed inset-0 z-40" onClick={() => setShowSyncPopup(false)} />
-                                    <div className="absolute right-0 mt-3 w-[320px] sm:w-[380px] z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <div className="fixed inset-0 z-40 bg-black/5" onClick={() => setShowSyncPopup(false)} />
+                                    {/* Mobile: Center fixed, Desktop: Right aligned absolute */}
+                                    <div className="fixed sm:absolute inset-x-4 sm:inset-x-auto sm:right-0 top-16 sm:top-auto sm:mt-3 sm:w-[380px] z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                                         <SyncStatusWidget apiKey={settings.apiKey} logDatabaseId={settings.notionSyncLogDbId} />
                                     </div>
                                 </>
