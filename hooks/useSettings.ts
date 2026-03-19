@@ -98,7 +98,7 @@ export function useSettings() {
                     try {
                         const parsedSettings = JSON.parse(stored);
                         setSettings({
-                            apiKey: parsedSettings.apiKey || defaultConfig.apiKey,
+                            apiKey: process.env.NEXT_PUBLIC_NOTION_API_KEY || parsedSettings.apiKey || defaultConfig.apiKey,
                             databases: parsedSettings.databases.length > 0
                                 ? parsedSettings.databases
                                 : defaultConfig.databases,

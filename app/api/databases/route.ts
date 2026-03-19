@@ -9,7 +9,7 @@ export async function GET() {
                 name: process.env.NOTION_DATABASE_NAME_1 || 'タスクDB',
                 relationDbId: process.env.NOTION_RELATION_DB_1 || process.env.NEXT_PUBLIC_RELATION_DB_1
             }
-        ].filter(db => db.id); // Filter out undefined databases
+        ].filter(db => db.id && !db.name.includes('まさる')); // Filter out undefined and 'まさる' databases
 
         return NextResponse.json({ databases });
     } catch (error: any) {

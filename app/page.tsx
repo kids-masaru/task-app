@@ -264,21 +264,8 @@ export default function Home() {
           {/* Header with Logo and Settings */}
           <div className="flex items-center justify-between mb-2">
             <div className="flex-1"></div>
-            <div className="flex items-center justify-center gap-3">
-              <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-100">
-                <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="4" y="4" width="16" height="16" rx="2" stroke="#8B5CF6" strokeWidth="2" />
-                  <path d="M8 8h8M8 12h8M8 16h5" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-                <span className="text-lg sm:text-xl font-bold text-purple-600">×</span>
-                <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="8" r="2" fill="#8B5CF6" />
-                  <circle cx="8" cy="14" r="1.5" fill="#8B5CF6" />
-                  <circle cx="16" cy="14" r="1.5" fill="#8B5CF6" />
-                  <path d="M12 10v4M8 14l4-4M16 14l-4-4" stroke="#8B5CF6" strokeWidth="1.5" strokeLinecap="round" />
-                  <rect x="6" y="18" width="12" height="2" rx="1" fill="#8B5CF6" />
-                </svg>
-              </div>
+            <div className="flex-1 flex justify-center">
+              {/* Logo removed per user request */}
             </div>
             <div className="flex-1 flex justify-end">
               {/* Call Counter Spec: Top area, unintrusive */}

@@ -456,12 +456,7 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                     >
                         <RefreshCw className={`w-4 h-4 text-gray-600 ${loading ? 'animate-spin' : ''}`} />
                     </button>
-                    <button
-                        onClick={onOpenSettings}
-                        className="p-2.5 bg-white shadow-sm border border-gray-100 rounded-full transition-all hover:shadow-md active:scale-90"
-                    >
-                        <SettingsIcon className="w-4 h-4 text-gray-600" />
-                    </button>
+                    {/* Settings button hidden per user request */}
                 </div>
             </header>
 
