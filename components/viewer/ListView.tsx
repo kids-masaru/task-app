@@ -54,7 +54,7 @@ export default function ListView({ items, onTaskClick, onStatusChange, apiKey }:
     };
 
     return (
-        <div className="flex flex-col gap-3 p-4 max-w-3xl mx-auto">
+        <div className="flex flex-col gap-1.5 p-3 max-w-3xl mx-auto">
             {items.map((page) => {
                 const title = getTitle(page);
                 const status = getStatusInfo(page);
@@ -67,39 +67,39 @@ export default function ListView({ items, onTaskClick, onStatusChange, apiKey }:
                     <div
                         key={page.id}
                         onClick={() => onTaskClick(page)}
-                        className={`group flex items-center p-4 bg-white rounded-2xl shadow-sm border transition-all cursor-pointer ${
+                        className={`group flex items-center px-3 py-2 bg-white rounded-xl shadow-sm border transition-all cursor-pointer ${
                             done ? 'bg-gray-50/50 border-transparent opacity-75' : 'bg-white border-gray-100 hover:border-blue-200 hover:shadow-md active:scale-[0.98]'
                         }`}
                     >
                         {/* Status Toggle Area */}
                         <button
                             onClick={(e) => handleToggleStatus(e, page)}
-                            className="mr-4 flex-shrink-0 transition-transform active:scale-90"
+                            className="mr-3 flex-shrink-0 transition-transform active:scale-90"
                         >
                             {done ? (
-                                <CheckCircle2 className="w-7 h-7 text-green-500 fill-green-50" />
+                                <CheckCircle2 className="w-5 h-5 text-green-500 fill-green-50" />
                             ) : (
-                                <Circle className="w-7 h-7 text-gray-300 group-hover:text-blue-400 transition-colors" />
+                                <Circle className="w-5 h-5 text-gray-300 group-hover:text-blue-400 transition-colors" />
                             )}
                         </button>
 
                         <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-0.5">
-                                {page.icon?.emoji && <span className="text-lg">{page.icon.emoji}</span>}
-                                <h3 className={`font-semibold text-gray-900 text-[15px] leading-snug truncate ${done ? 'line-through text-gray-400' : ''}`}>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                                {page.icon?.emoji && <span className="text-sm">{page.icon.emoji}</span>}
+                                <h3 className={`font-semibold text-gray-900 text-[13px] leading-tight truncate ${done ? 'line-through text-gray-400' : ''}`}>
                                     {title}
                                 </h3>
                             </div>
                             
                             {/* Subtitle / Context info */}
-                            <div className="flex items-center gap-3 text-[11px] text-gray-500">
+                            <div className="flex items-center gap-2 text-[10px] text-gray-500">
                                 {relationProp && (
                                     <div className="flex items-center gap-1">
                                         <RelationDisplay relations={relationProp[1].relation} apiKey={apiKey} />
                                     </div>
                                 )}
                                 {status && !done && (
-                                    <span className="px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded-md font-medium">
+                                    <span className="px-1.5 py-0 bg-blue-50 text-blue-600 rounded font-medium">
                                         {status.value}
                                     </span>
                                 )}
@@ -107,8 +107,8 @@ export default function ListView({ items, onTaskClick, onStatusChange, apiKey }:
                         </div>
 
                         {/* Detail Arrow */}
-                        <div className="ml-4 text-gray-300 group-hover:text-gray-400">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="ml-2 text-gray-300 group-hover:text-gray-400">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                         </div>

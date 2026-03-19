@@ -420,12 +420,11 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
     return (
         <div className="min-h-screen bg-gray-50 pb-20 font-sans">
             {/* Header */}
-            <header className="sticky top-0 z-30 bg-gray-50/80 backdrop-blur-xl border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-black text-gray-900 tracking-tight">Tasks</h1>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Notion Task Manager</p>
+            <header className="sticky top-0 z-30 bg-gray-50/80 backdrop-blur-xl border-b border-gray-100 px-3 sm:px-6 py-2.5 sm:py-4 flex items-center justify-between gap-2">
+                <div className="min-w-0 flex-shrink">
+                    <h1 className="text-lg sm:text-2xl font-black text-gray-900 tracking-tight truncate">Tasks</h1>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
                     {settings.notionSyncLogDbId && (
                         <div className="relative">
                             <button
@@ -467,30 +466,6 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
 
                         {/* Database Section */}
                         <div className="px-4">
-                            {/* Tabs */}
-                            {settings.databases.length > 0 && (
-                                <div className="mb-4 overflow-x-auto no-scrollbar">
-                                    <div className="flex gap-2">
-                                        {settings.databases.map((db) => (
-                                            <button
-                                                key={db.id}
-                                                onClick={() => setActiveTabId(db.id)}
-                                                className={`flex items-center px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeTabId === db.id
-                                                    ? 'bg-gray-900 text-white shadow-md'
-                                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                                                    }`}
-                                            >
-                                                {db.viewType === 'card' ? (
-                                                    <LayoutGrid className="w-3.5 h-3.5 mr-1.5" />
-                                                ) : (
-                                                    <ListIcon className="w-3.5 h-3.5 mr-1.5" />
-                                                )}
-                                                {db.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
 
                             {/* Filter Bar */}
                             {activeDatabase && (
@@ -529,30 +504,6 @@ export default function Dashboard({ settings, onOpenSettings, onUpdateDatabaseSe
                     <>
                         {/* Database Section */}
                         <div className="px-4 mb-8">
-                            {/* Tabs */}
-                            {settings.databases.length > 0 && (
-                                <div className="mb-4 overflow-x-auto no-scrollbar">
-                                    <div className="flex gap-2">
-                                        {settings.databases.map((db) => (
-                                            <button
-                                                key={db.id}
-                                                onClick={() => setActiveTabId(db.id)}
-                                                className={`flex items-center px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeTabId === db.id
-                                                    ? 'bg-gray-900 text-white shadow-md'
-                                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                                                    }`}
-                                            >
-                                                {db.viewType === 'card' ? (
-                                                    <LayoutGrid className="w-3.5 h-3.5 mr-1.5" />
-                                                ) : (
-                                                    <ListIcon className="w-3.5 h-3.5 mr-1.5" />
-                                                )}
-                                                {db.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
 
                             {/* Filter Bar */}
                             {activeDatabase && (
